@@ -1,0 +1,2 @@
+unknown-command-msg: '<red><bold>Unknown command<reset> <dark_gray>Type <bold>@help@<reset> <dark_gray>to get the command list.'
+command-whitelist: []

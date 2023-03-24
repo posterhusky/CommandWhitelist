@@ -1,0 +1,5 @@
+name: CommandWhitelist
+version: '${project.version}'
+main: net.vanolex.commandwhitelist.CommandWhitelist
+api-version: 1.19
+authors: [ Vanolex ]
