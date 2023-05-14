@@ -7,14 +7,18 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerCommandSendEvent
 import org.bukkit.event.server.TabCompleteEvent
 
-class CommandListener(val plugin: CommandWhitelist) : Listener {
+class CommandListener(private val plugin: CommandWhitelist) : Listener {
 
     @EventHandler
     fun onCommand(e: PlayerCommandPreprocessEvent) {
         val p: Player = e.player
 
         // return if the command is allowed
-        for (i in plugin.config.getStringList("command-whitelist")) if (e.message.startsWith("/$i")) return
+        for (i in plugin.config.getStringList("command-whitelist")) {
+            if (e.message.startsWith("/$i")) {
+                return
+            }
+        }
 
         val msg: String = plugin.config.getString("unknown-command-msg")
                 ?: "<red><bold>Unknown command<reset> <dark_gray>Type <bold>@help@<reset> <dark_gray>to get the command list."
@@ -24,7 +28,7 @@ class CommandListener(val plugin: CommandWhitelist) : Listener {
             e.isCancelled = true
             p.sendMessage(mm.deserialize(msg.replace("@help@", suggestCmd("help"))))
         } else {
-            p.sendMessage("This command is inaccessible to normal players.")
+            p.sendPlainMessage("This command is inaccessible to normal players.")
         }
     }
 
@@ -35,6 +39,9 @@ class CommandListener(val plugin: CommandWhitelist) : Listener {
         val allowedCommands = plugin.config.getStringList("command-whitelist")
 
         // removes all the commands that aren't allowed (errors will occur if you don't clone e.commands)
+        //
+        // can you use         e.commands.clear() here?
+        //
         for (i in ArrayList(e.commands)) {
             if (i !in allowedCommands) {
                 e.commands.remove(i)
@@ -44,8 +51,11 @@ class CommandListener(val plugin: CommandWhitelist) : Listener {
         // command sorting (puts aliases to the bottom of the tab completion list)
         e.commands.sortedWith { s1: String, s2: String ->
             var result = 0
-            if (s1.length > 2 && s2.length <= 2) result = 1
-            else if (s1.length <= 2 && s2.length > 2) result = -1
+            if (s1.length > 2 && s2.length <= 2) {
+                result = 1
+            } else if (s1.length <= 2 && s2.length > 2) {
+                result = -1
+            }
             result
         }
 
@@ -55,7 +65,9 @@ class CommandListener(val plugin: CommandWhitelist) : Listener {
     @EventHandler
     fun onHelpTab(e: TabCompleteEvent) {
         // removes the /help tab completions
-        if (e.buffer.startsWith("/help", true)) e.completions = listOf()
+        if (e.buffer.startsWith("/help", true)) {
+            e.completions = listOf()
+        }
     }
 
 }
