@@ -1,12 +1,11 @@
 package net.vanolex.commandwhitelist
 
-import net.vanolex.lobbyutility.listeners.CommandListener
 import org.bukkit.plugin.java.JavaPlugin
 
 
 class CommandWhitelist : JavaPlugin() {
     override fun onEnable() {
-        getLogger().info("Successfully enabled Command Whitelist!")
+        logger.info("Successfully enabled Command Whitelist!")
 
         // register listener
         server.pluginManager.registerEvents(CommandListener(this), this)
@@ -17,6 +16,6 @@ class CommandWhitelist : JavaPlugin() {
     }
 
     override fun onDisable() {
-        getLogger().info("Successfully disabled Command Whitelist!")
+        logger.info("Successfully disabled Command Whitelist!")
     }
 }
